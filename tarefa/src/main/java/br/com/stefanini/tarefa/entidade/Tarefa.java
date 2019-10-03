@@ -9,19 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
+
 import br.com.stefanini.tarefa.request.dto.TarefaRequestDTO;
 import br.com.stefanini.tarefa.response.dto.TarefaResponseDTO;
 
 @Table(name = "TB_TAREFA")
 @Entity
-public class Tarefa {
+public class Tarefa extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false)
 	private Long id;
 
-	@Column(name = "NOME", length = 300 , nullable = false)
+	@Column(name = "NOME", length = 300, nullable = false)
 	private String nome;
 
 	@Column(name = "DESCRICAO", length = 800, nullable = true)
@@ -76,16 +78,22 @@ public class Tarefa {
 	public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
 	}
-	
+
 	public static Tarefa novo(TarefaRequestDTO tarefaRequestDTO) {
 		Tarefa tarefa = new Tarefa();
+
+		tarefa.lancarValidacaoException(StringUtils.isEmpty(tarefaRequestDTO.getNome()),
+				"O campo 'nome' é obrigatório");
+		tarefa.lancarValidacaoException(StringUtils.isEmpty(tarefaRequestDTO.getDescricao()),
+				"O campo 'descricao' é obrigatório");
+
 		tarefa.setNome(tarefaRequestDTO.getNome());
 		tarefa.setDescricao(tarefaRequestDTO.getDescricao());
 		tarefa.setDataCriacao(LocalDateTime.now());
 		tarefa.setDataAtualizacao(LocalDateTime.now());
 		return tarefa;
 	}
-	
+
 	public TarefaResponseDTO dto() {
 		TarefaResponseDTO dto = new TarefaResponseDTO();
 		dto.setId(this.id);
