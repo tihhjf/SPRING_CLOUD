@@ -17,10 +17,13 @@ public class TarefaService extends BaseService {
 	private TarefaRepository tarefaRepository;
 
 	public TarefaResponseDTO salvar(TarefaRequestDTO tarefaRequestDTO) {
+		Tarefa tarefa = Tarefa.novo(tarefaRequestDTO);
 
-		this.lancarValidacaoException(tarefaRepository.buscarPorNome(tarefaRequestDTO.getNome()) != null,
+		this.lancarValidacaoException(tarefaRepository.buscarPorNome(tarefa.getNome()) != null,
 				MessageFormat.format("Ja existe uam tarefa com o nome {0}", tarefaRequestDTO.getNome()));
+		
 
-		return tarefaRepository.save(Tarefa.novo(tarefaRequestDTO)).dto();
+		return tarefaRepository.save(tarefa).dto();
 	}
+
 }
