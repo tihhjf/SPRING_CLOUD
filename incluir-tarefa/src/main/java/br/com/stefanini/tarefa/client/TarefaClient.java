@@ -4,9 +4,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.com.stefanini.tarefa.component.ConsultarTarefasFallback;
 import br.com.stefanini.tarefa.response.dto.TarefaResponseDTO;
 
-@FeignClient(name = "consultar-tarefas", path = "/consultar-tarefas")
+@FeignClient(name = "consultar-tarefas", path = "/consultar-tarefas", fallback = ConsultarTarefasFallback.class)
 public interface TarefaClient {
 
 	@GetMapping
